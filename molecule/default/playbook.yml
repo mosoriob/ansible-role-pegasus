@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    tomcat_jre_home: /usr
+    pegasus:
+      shared_scratch: /var/scratch/pegasus/scratch
+      local_storage: /var/storage/mint/pegasus
+      jre_home: "{{ tomcat_jre_home }}"
+      storage_dir: /var/scratch/pegasus/submit
+      site_catalog: /etc/wings/pegasus/sites.xml
+      site: condor_pool
+      force: true
+      request_memory: 4 GB
+      request_disk: 40 GB
+      project_name: mint    
+  roles:
+    - ansible-role-tomcat

@@ -1,0 +1,27 @@
+# vars file for core_dependencies
+#
+_pegasus_packages:
+  default:
+    - pegasus
+  Debian:
+    - pegasus
+  Ubuntu:
+    - pegasus
+
+pegasus_packages: "{{ _pegasus_packages[ansible_distribution] | default(_pegasus_packages['default']) }}"
+
+pegasus_gpg_key: http://download.pegasus.isi.edu/pegasus/gpg.txt
+htcondor_gpg_key: http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
+
+
+pegasus_yum_repositories:
+  - name: pegasus
+    baseurl: "http://download.pegasus.isi.edu/wms/download/rhel/$releasever/$basearch/"
+    description: "Pegasus repository"
+    gpg_key:  http://download.pegasus.isi.edu/pegasus/gpg.txt
+  - name: htcondor
+    baseurl: "https://research.cs.wisc.edu/htcondor/yum/stable/rhel$releasever"
+    description: htcondor
+    gpg_key: http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
+pegasus_apt_repositories:
+  - "deb https://download.pegasus.isi.edu/pegasus/debian {{ ansible_distribution_release }} main"

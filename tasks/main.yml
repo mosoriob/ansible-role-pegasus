@@ -1,0 +1,64 @@
+# tasks file for core_dependencies
+- name: install epel-release
+  package:
+    name: epel-release
+    state: present
+  when:
+    - ansible_distribution in [ "CentOS", "RedHat" ]
+  register: epel_install_epel_release
+  until: epel_install_epel_release is succeeded
+  retries: 3
+
+- name: install pegasus key
+  apt_key:
+    url: "{{ pegasus_apt_key }}"
+    state: present
+    validate_certs: "{{ pegasus_validate_certs }}"
+  when:
+    - ansible_distribution == "Debian"
+  register: pegasus_install_pegasus_key
+  until: pegasus_install_pegasus_key is succeeded
+  retries: 3
+
+- name: install pegasus deb repository
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ pegasus_apt_repositories }}"
+  when:
+    - ansible_distribution == "Debian"
+    
+- name: install pegasus rpm repository
+  yum_repository:
+    name: "{{ item.name }}"
+    state: present
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgkey: "{{ item.gpg_key }}"
+  with_items:
+    - "{{ pegasus_yum_repositories }}"
+  when:
+    - ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "7"
+  loop_control:
+    label: "{{ item.name }}"
+    
+- name: install pegasus
+  package:
+    name: "{{ pegasus_packages }}"
+    state: present
+  register: pegasus_install_pegasus
+  until: pegasus_install_pegasus is succeeded
+  retries: 3    
+
+- name: install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ core_dependencies_shared_packages }}"
+    - "{{ core_dependencies_packages }}"
+  register: core_dependencies_install_packages
+  until: core_dependencies_install_packages is succeeded
+  retries: 3

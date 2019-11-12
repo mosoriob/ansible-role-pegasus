@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - robertdebock.bootstrap
+    - robertdebock.core_dependencies
+    - robertdebock.java
+    - robertdebock.tomcat
+    - nginxinc.nginx
+

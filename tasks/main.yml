@@ -1,3 +1,4 @@
+---
 # tasks file for core_dependencies
 - name: install epel-release
   package:
@@ -28,7 +29,7 @@
     - "{{ pegasus_apt_repositories }}"
   when:
     - ansible_distribution == "Debian"
-    
+
 - name: install pegasus rpm repository
   yum_repository:
     name: "{{ item.name }}"
@@ -43,14 +44,14 @@
     - ansible_distribution_major_version == "7"
   loop_control:
     label: "{{ item.name }}"
-    
+
 - name: install pegasus
   package:
     name: "{{ pegasus_packages }}"
     state: present
   register: pegasus_install_pegasus
   until: pegasus_install_pegasus is succeeded
-  retries: 3    
+  retries: 3
 
 - name: install packages
   package:

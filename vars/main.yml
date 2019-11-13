@@ -1,3 +1,4 @@
+---
 # vars file for core_dependencies
 #
 _pegasus_packages:
@@ -8,7 +9,7 @@ _pegasus_packages:
   Ubuntu:
     - pegasus
 
-pegasus_packages: "{{ _pegasus_packages[ansible_distribution] | default(_pegasus_packages['default']) }}"
+pegasus_packages: {{ _pegasus_packages[ansible_distribution] | default(_pegasus_packages['default']) }}"
 
 pegasus_gpg_key: http://download.pegasus.isi.edu/pegasus/gpg.txt
 htcondor_gpg_key: http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
